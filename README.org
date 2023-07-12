@@ -1,0 +1,64 @@
+#+TITLE: ESP WiFi Deauth Detector
+#+AUTHOR: cheattheweb
+
+
+
+The ESP Deauther project aims to raise awareness about WiFi security
+vulnerabilities in a manner accessible to all. Through the use of the ESP8266
+board, it illustrates the potential risks associated with commonly used WiFi
+networks, emphasizing the importance of robust security measures and the
+need for stronger protocols. The project showcases deauthentication attacks,
+providing a tangible demonstration of the vulnerabilities present.
+Furthermore, it introduces a WiFi monitoring device that detects and alerts
+users to ongoing deauthentication attacks, empowering them to take prompt
+action. By increasing awareness of these vulnerabilities, the ESP Deauther
+project seeks to foster a culture of security consciousness, encouraging
+individuals to adopt stronger security practices for their wireless networks and
+protect their digital assets.
+
+* All the things you need
+
+1. ESP-8266 (NodeMCU - CH340)
+2. LEDs
+3. Buzzer
+4. SH1106 OLED Display
+5. Bread Board
+6. Jumper Wire
+* Flashing the Detector
+The code incorporated logic to
+control the LED lights, buzzer, and display to provide real-time alerts when an
+attack was identified. The display would indicate the attack status, while the
+LEDs and buzzer would activate to provide visual and audible notifications.
+
+#+begin_src c
+if (!buf || len < 28)
+return;
+byte pkt_type = buf[12];
+
+if (pkt_type == 0xA0 || pkt_type == 0xC0)
+{
+++packet_rate;
+}
+
+#+end_src
+
+The function begins by checking if the buffer pointer is null or if the packet
+length is less than 28 bytes. If either of these conditions is true, the function
+returns, indicating that the packet does not contain a MAC header and should
+be dropped.
+Next, the function extracts the packet type from the frame control field,
+located at index 12 of the buffer. This value represents the second half of the
+frame control field and provides information about the type of packet being
+captured.
+The function then checks if the captured packet is a deauthentication
+(pkt_type is 0xA0) or disassociation (pkt_type is 0xC0) frame. These frames
+are specific types of frames used in WiFi networks to terminate or disconnect
+clients from the network.
+If the captured packet matches either of these types, the function increments
+the packet_rate variable, which likely serves as a counter to keep track of the
+frequency of deauthentication or disassociation frames detected.
+This code snippet demonstrates a simplified approach to detecting
+deauthentication and disassociation frames within the WiFi network. It is a
+crucial part of the overall attack detection mechanism implemented in the
+ESP Deauther and Detector project, contributing to real-time identification
+and alerting of potential attacks.
